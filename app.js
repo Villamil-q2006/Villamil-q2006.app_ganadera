@@ -1,89 +1,132 @@
-// Referencias al DOM
-const inputVacas   = document.getElementById('vacas');
-const inputLitros  = document.getElementById('litros');
-const inputPrecio  = document.getElementById('precio');
-const inputGastos  = document.getElementById('gastos');
+const botones = document.querySelectorAll('.animal-btn');
 
-const btnCalcular  = document.getElementById('btn-calcular');
-const btnLimpiar   = document.getElementById('btn-limpiar');
+const titulo = document.getElementById('titulo');
+const subtitulo = document.getElementById('subtitulo');
 
-const secResultados    = document.getElementById('resultados');
-const resProduccion    = document.getElementById('res-produccion');
-const resIngresos      = document.getElementById('res-ingresos');
-const resGanancia      = document.getElementById('res-ganancia');
-const mensajeResultado = document.getElementById('mensaje-resultado');
+const cantidad = document.getElementById('cantidad');
+const produccion = document.getElementById('produccion');
+const precio = document.getElementById('precio');
+const gastos = document.getElementById('gastos');
 
-// Formato de número colombiano
-function formatearNumero(n) {
-  return n.toLocaleString('es-CO', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2
+const resProduccion = document.getElementById('res-produccion');
+const resIngresos = document.getElementById('res-ingresos');
+const resGanancia = document.getElementById('res-ganancia');
+const mensaje = document.getElementById('mensaje');
+const resultados = document.getElementById('resultados');
+
+let animalActual = "vaca";
+
+const config = {
+  vaca: {
+    titulo: "Calculadora de Vacas",
+    subtitulo: "Producción de leche",
+    unidad: "litros"
+  },
+  cerdo: {
+    titulo: "Calculadora de Cerdos",
+    subtitulo: "Producción de carne",
+    unidad: "kg"
+  },
+  gallina: {
+    titulo: "Calculadora de Gallinas",
+    subtitulo: "Producción de huevos",
+    unidad: "huevos"
+  }
+};
+
+const memoria = {
+  vaca: {},
+  cerdo: {},
+  gallina: {}
+};
+
+botones.forEach(btn => {
+  btn.addEventListener('click', () => {
+    guardarDatos();
+
+    botones.forEach(b => b.classList.remove('activo'));
+    btn.classList.add('activo');
+
+    animalActual = btn.dataset.animal;
+
+    actualizarUI();
+    cargarDatos();
   });
+});
+
+function actualizarUI() {
+  titulo.textContent = config[animalActual].titulo;
+  subtitulo.textContent = config[animalActual].subtitulo;
 }
 
-// Validar campos
-function validarCampos(vacas, litros, precio, gastos) {
-  return [vacas, litros, precio, gastos].every(val => !isNaN(val) && val >= 0);
+function guardarDatos() {
+  memoria[animalActual] = {
+    cantidad: cantidad.value,
+    produccion: produccion.value,
+    precio: precio.value,
+    gastos: gastos.value,
+    resProduccion: resProduccion.textContent,
+    resIngresos: resIngresos.textContent,
+    resGanancia: resGanancia.textContent,
+    mensaje: mensaje.textContent,
+    visible: resultados.style.display
+  };
 }
 
-// Funcion principal
+function cargarDatos() {
+  const data = memoria[animalActual] || {};
+
+  cantidad.value = data.cantidad || "";
+  produccion.value = data.produccion || "";
+  precio.value = data.precio || "";
+  gastos.value = data.gastos || "";
+
+  resProduccion.textContent = data.resProduccion || "--";
+  resIngresos.textContent = data.resIngresos || "--";
+  resGanancia.textContent = data.resGanancia || "--";
+  mensaje.textContent = data.mensaje || "";
+
+  resultados.style.display = data.visible || "none";
+}
+
 function calcular() {
-  const vacas  = parseFloat(inputVacas.value);
-  const litros = parseFloat(inputLitros.value);
-  const precio = parseFloat(inputPrecio.value);
-  const gastos = parseFloat(inputGastos.value);
+  const c = parseFloat(cantidad.value);
+  const p = parseFloat(produccion.value);
+  const pr = parseFloat(precio.value);
+  const g = parseFloat(gastos.value);
 
-  if (!validarCampos(vacas, litros, precio, gastos)) {
-    alert('Por favor completa todos los campos con valores validos.');
+  if (isNaN(c) || isNaN(p) || isNaN(pr) || isNaN(g)) {
+    alert("Completa todos los campos correctamente");
     return;
   }
 
-  const produccionTotal = vacas * litros;
-  const ingresosBrutos  = produccionTotal * precio;
-  const gananciaNeta    = ingresosBrutos - gastos;
+  const total = c * p;
+  const ingresos = total * pr;
+  const ganancia = ingresos - g;
 
-  resProduccion.textContent = formatearNumero(produccionTotal) + ' L';
-  resIngresos.textContent   = '$ ' + formatearNumero(ingresosBrutos);
-  resGanancia.textContent   = '$ ' + formatearNumero(gananciaNeta);
+  resProduccion.textContent = total + " " + config[animalActual].unidad;
+  resIngresos.textContent = "$ " + ingresos;
+  resGanancia.textContent = "$ " + ganancia;
 
-  if (gananciaNeta >= 0) {
-    resGanancia.classList.remove('negativo');
-    mensajeResultado.className   = 'alerta ganancia';
-    mensajeResultado.textContent = 'Dia rentable. Ganancia neta: $ ' + formatearNumero(gananciaNeta);
+  if (ganancia >= 0) {
+    mensaje.textContent = "Ganancia ✔";
+    mensaje.className = "ganancia-ok";
   } else {
-    resGanancia.classList.add('negativo');
-    mensajeResultado.className   = 'alerta perdida';
-    mensajeResultado.textContent = 'Dia con perdida. Los gastos superan los ingresos en: $ ' + formatearNumero(Math.abs(gananciaNeta));
+    mensaje.textContent = "Pérdida ✖";
+    mensaje.className = "perdida";
   }
 
-  secResultados.style.display = 'block';
-  secResultados.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  resultados.style.display = "block";
+
+  guardarDatos();
 }
 
-// Limpiar
 function limpiar() {
-  inputVacas.value  = '';
-  inputLitros.value = '';
-  inputPrecio.value = '';
-  inputGastos.value = '';
-
-  secResultados.style.display  = 'none';
-  resProduccion.textContent    = '--';
-  resIngresos.textContent      = '--';
-  resGanancia.textContent      = '--';
-  mensajeResultado.className   = 'alerta';
-  mensajeResultado.textContent = '';
-  resGanancia.classList.remove('negativo');
-
-  inputVacas.focus();
+  memoria[animalActual] = {};
+  cargarDatos();
 }
 
-// Eventos
-btnCalcular.addEventListener('click', calcular);
-btnLimpiar.addEventListener('click', limpiar);
+document.getElementById('btn-calcular').addEventListener('click', calcular);
+document.getElementById('btn-limpiar').addEventListener('click', limpiar);
 
-[inputVacas, inputLitros, inputPrecio, inputGastos].forEach(input => {
-  input.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') calcular();
-  });
-});
+actualizarUI();
