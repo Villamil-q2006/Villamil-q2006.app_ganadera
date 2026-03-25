@@ -3,8 +3,6 @@
 Una aplicación web sencilla y práctica para calcular la producción, ingresos y ganancias de animales de granja (vacas, cerdos y gallinas).  
 Desarrollada con **HTML, CSS y JavaScript**, pensada para pequeños productores y comunidades rurales.
 
-
-
 ##  Características
 
 - Selección de animal: vacas, cerdos o gallinas.  
@@ -30,8 +28,9 @@ calculadora-ganadera/
 
 
 
-## 🚀 Instalación y uso
+##  Instalación y uso
 
 1. Clona este repositorio o descarga los archivos.  
    ```bash
    git clone https://github.com/usuario/calculadora-ganadera.git
+
