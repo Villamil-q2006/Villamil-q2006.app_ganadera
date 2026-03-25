@@ -14,6 +14,7 @@ Desarrollada con **HTML, CSS y JavaScript**, pensada para pequeños productores 
 - Memoria temporal: conserva los datos al cambiar entre animales.  
 - Sección de contacto con acceso directo a WhatsApp.  
 - Botón flotante de WhatsApp siempre visible para comunicación rápida.
+- Inicio de sesión al inicio de la página y luego dentro un botón para cerrar la sesión
 
 
 

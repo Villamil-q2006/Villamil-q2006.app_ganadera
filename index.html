@@ -8,7 +8,17 @@
 </head>
 <body>
 
-<main class="contenedor">
+<!-- LOGIN -->
+<div id="login-container">
+  <h2>Iniciar Sesión</h2>
+  <input type="text" id="username" placeholder="Usuario">
+  <input type="password" id="password" placeholder="Contraseña">
+  <button id="btn-login">Entrar</button>
+  <p id="error-msg" class="error">Usuario o contraseña incorrectos</p>
+</div>
+
+<!-- APP -->
+<main class="contenedor" id="app-container" style="display:none;">
 
   <div class="selector">
     <button class="animal-btn activo" data-animal="vaca">Vacas</button>
@@ -50,12 +60,13 @@
     </a>
   </section>
 
-</main>
+  <!-- Botón flotante de WhatsApp -->
+  <a href="https://wa.me/573116314007" target="_blank" class="whatsapp-float">
+    🥑
+  </a>
 
-<!-- Botón flotante de WhatsApp -->
-<a href="https://wa.me/573116314007" target="_blank" class="whatsapp-float">
- 🥑
-</a>
+  <button id="btn-logout">Cerrar Sesión</button>
+</main>
 
 <script src="app.js"></script>
 </body>
