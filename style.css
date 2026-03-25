@@ -132,9 +132,43 @@ button:active {
   transform: scale(0.97);
 }
 
+/* CONTACTO */
+.contacto {
+  text-align: center;
+}
+
+.btn-whatsapp {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 12px 20px;
+  background: #25D366; /* color oficial de WhatsApp */
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn-whatsapp:hover {
+  background: #1ebe5d;
+}
+
+/* BOTÓN FLOTANTE */
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #25D366;
+  color: white;
+  font-size: 2rem;
+  padding: 10px 15px;
+  border-radius: 50%;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
 /* RESPONSIVE */
 @media (max-width: 600px) {
-
   .contenedor {
     padding: 20px 15px;
   }
