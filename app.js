@@ -1,13 +1,46 @@
-const botones = document.querySelectorAll('.animal-btn');
+// Usuarios permitidos
+const USERS = [
+  { username: "admin", password: "1234" },
+  { username: "juan", password: "ganadero" }
+];
 
+// LOGIN
+const loginBtn = document.getElementById("btn-login");
+const logoutBtn = document.getElementById("btn-logout");
+const errorMsg = document.getElementById("error-msg");
+
+loginBtn.addEventListener("click", () => {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  const userFound = USERS.find(u => u.username === username && u.password === password);
+
+  if (userFound) {
+    document.getElementById("login-container").style.display = "none";
+    document.getElementById("app-container").style.display = "block";
+    errorMsg.style.display = "none";
+  } else {
+    errorMsg.style.display = "block";
+  }
+});
+
+logoutBtn.addEventListener("click", () => {
+  document.getElementById("app-container").style.display = "none";
+  document.getElementById("login-container").style.display = "block";
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+});
+
+// -------------------------
+// CALCULADORA GANADERA
+// -------------------------
+const botones = document.querySelectorAll('.animal-btn');
 const titulo = document.getElementById('titulo');
 const subtitulo = document.getElementById('subtitulo');
-
 const cantidad = document.getElementById('cantidad');
 const produccion = document.getElementById('produccion');
 const precio = document.getElementById('precio');
 const gastos = document.getElementById('gastos');
-
 const resProduccion = document.getElementById('res-produccion');
 const resIngresos = document.getElementById('res-ingresos');
 const resGanancia = document.getElementById('res-ganancia');
@@ -17,38 +50,19 @@ const resultados = document.getElementById('resultados');
 let animalActual = "vaca";
 
 const config = {
-  vaca: {
-    titulo: "Calculadora de Vacas",
-    subtitulo: "Producción de leche",
-    unidad: "litros"
-  },
-  cerdo: {
-    titulo: "Calculadora de Cerdos",
-    subtitulo: "Producción de carne",
-    unidad: "kg"
-  },
-  gallina: {
-    titulo: "Calculadora de Gallinas",
-    subtitulo: "Producción de huevos",
-    unidad: "huevos"
-  }
+  vaca: { titulo: "Calculadora de Vacas", subtitulo: "Producción de leche", unidad: "litros" },
+  cerdo: { titulo: "Calculadora de Cerdos", subtitulo: "Producción de carne", unidad: "kg" },
+  gallina: { titulo: "Calculadora de Gallinas", subtitulo: "Producción de huevos", unidad: "huevos" }
 };
 
-const memoria = {
-  vaca: {},
-  cerdo: {},
-  gallina: {}
-};
+const memoria = { vaca: {}, cerdo: {}, gallina: {} };
 
 botones.forEach(btn => {
   btn.addEventListener('click', () => {
     guardarDatos();
-
     botones.forEach(b => b.classList.remove('activo'));
     btn.classList.add('activo');
-
     animalActual = btn.dataset.animal;
-
     actualizarUI();
     cargarDatos();
   });
@@ -75,17 +89,14 @@ function guardarDatos() {
 
 function cargarDatos() {
   const data = memoria[animalActual] || {};
-
   cantidad.value = data.cantidad || "";
   produccion.value = data.produccion || "";
   precio.value = data.precio || "";
   gastos.value = data.gastos || "";
-
   resProduccion.textContent = data.resProduccion || "--";
   resIngresos.textContent = data.resIngresos || "--";
   resGanancia.textContent = data.resGanancia || "--";
   mensaje.textContent = data.mensaje || "";
-
   resultados.style.display = data.visible || "none";
 }
 
@@ -117,7 +128,6 @@ function calcular() {
   }
 
   resultados.style.display = "block";
-
   guardarDatos();
 }
 
