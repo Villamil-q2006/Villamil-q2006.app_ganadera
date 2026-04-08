@@ -5,16 +5,17 @@ Desarrollada con **HTML, CSS y JavaScript**, pensada para pequeños productores 
 
 ##  Características
 
-- Selección de animal: vacas, cerdos o gallinas.  
+- Selección de animal: vacas, cerdos o gallinas.
 - Cálculo automático de:
   - Producción total.
   - Ingresos generados.
-  - Ganancia o pérdida.  
+  - Ganancia o pérdida.
 - Interfaz clara y responsiva.  
-- Memoria temporal: conserva los datos al cambiar entre animales.  
-- Sección de contacto con acceso directo a WhatsApp.  
+- Memoria temporal: conserva los datos al cambiar entre animales.
+- Sección de contacto con acceso directo a WhatsApp.
 - Botón flotante de WhatsApp siempre visible para comunicación rápida.
 - Inicio de sesión al inicio de la página y luego dentro un botón para cerrar la sesión
+- Glosario Técnico Profesional: Sección colapsable que define conceptos clave de zootecnia y finanzas agropecuarias
 
 
 
@@ -25,6 +26,7 @@ calculadora-ganadera/
 ├── index.html      # Estructura principal de la aplicación
 ├── style.css       # Estilos y diseño visual
 ├── app.js          # Lógica de cálculo y manejo de datos
+├── glosario.html   # Sección de glosario
 └── README.md       # Documentación del proyecto
 
 

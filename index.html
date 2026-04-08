@@ -3,70 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora Ganadera</title>
+  <title>Calculadora Ganadera Pro - Portal Rural</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-container">
-  <h2>Iniciar Sesión</h2>
+  <h2>Acceso Profesional</h2>
   <input type="text" id="username" placeholder="Usuario">
   <input type="password" id="password" placeholder="Contraseña">
-  <button id="btn-login">Entrar</button>
-  <p id="error-msg" class="error">Usuario o contraseña incorrectos</p>
+  <button id="btn-login">Entrar al Portal</button>
+  <p id="error-msg" class="error">Credenciales incorrectas</p>
 </div>
 
-<!-- APP -->
 <main class="contenedor" id="app-container" style="display:none;">
 
   <div class="selector">
     <button class="animal-btn activo" data-animal="vaca">Vacas</button>
     <button class="animal-btn" data-animal="cerdo">Cerdos</button>
     <button class="animal-btn" data-animal="gallina">Gallinas</button>
+    <button class="animal-btn" data-animal="oveja">Ovejas</button>
+    <button class="animal-btn" data-animal="cabra">Cabras</button>
+    <button class="animal-btn" data-animal="pez">Peces</button>
   </div>
 
   <header>
-    <h1 id="titulo">Calculadora de Vacas</h1>
+    <h1 id="titulo">Gestión de Vacas</h1>
     <p id="subtitulo">Producción de leche</p>
   </header>
 
   <section class="tarjeta">
     <div class="grilla">
-      <input type="number" id="cantidad" placeholder="Cantidad de animales">
-      <input type="number" id="produccion" placeholder="Producción por animal">
-      <input type="number" id="precio" placeholder="Precio por unidad">
-      <input type="number" id="gastos" placeholder="Gastos diarios">
+      <div class="input-group">
+        <label>Población Actual</label>
+        <input type="number" id="cantidad" placeholder="Ej: 50">
+      </div>
+      <div class="input-group">
+        <label>Producción/Animal</label>
+        <input type="number" id="produccion" placeholder="L, Kg o U">
+      </div>
+      <div class="input-group">
+        <label>Precio de Venta</label>
+        <input type="number" id="precio" placeholder="$ Unidad">
+      </div>
+      <div class="input-group">
+        <label>Costos Operativos</label>
+        <input type="number" id="gastos" placeholder="$ Total diario">
+      </div>
     </div>
 
-    <button id="btn-calcular">Calcular</button>
-    <button id="btn-limpiar">Limpiar</button>
+    <button id="btn-calcular">Realizar Cálculo</button>
+    <button id="btn-limpiar">Limpiar Datos</button>
   </section>
 
   <section class="tarjeta" id="resultados">
-    <p>Total producido: <span id="res-produccion">--</span></p>
-    <p>Ingresos: <span id="res-ingresos">--</span></p>
-    <p>Ganancia: <span id="res-ganancia">--</span></p>
+    <p>Volumen Total: <span id="res-produccion">--</span></p>
+    <p>Ingresos Brutos: <span id="res-ingresos">--</span></p>
+    <p>Utilidad Neta: <span id="res-ganancia">--</span></p>
     <p id="mensaje"></p>
   </section>
 
-  <!-- Sección de contacto -->
-  <section class="tarjeta contacto">
-    <h2>Contacto</h2>
-    <p>Juan Villamil - Desarrollador del portal</p>
-    <p>Santa Bárbara, Antioquia</p>
-    <a href="https://wa.me/573116314007" target="_blank" class="btn-whatsapp">
-      Escríbeme por WhatsApp
-    </a>
-  </section>
-
-  <!-- Botón flotante de WhatsApp -->
-  <a href="https://wa.me/573116314007" target="_blank" class="whatsapp-float">
-    🥑
-  </a>
+  <a href="glosario.html" class="btn-enlace">Abrir Glosario Técnico</a>
 
   <button id="btn-logout">Cerrar Sesión</button>
 </main>
+
+<a href="https://wa.me/573116314007" target="_blank" class="whatsapp-float">🥑</a>
 
 <script src="app.js"></script>
 </body>

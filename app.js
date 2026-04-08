@@ -1,113 +1,144 @@
-// Usuarios permitidos
+// ============================================================
+// CONFIGURACIÓN Y PERSISTENCIA - PORTAL RURAL EL PROGRESO
+// ============================================================
+
 const USERS = [
   { username: "admin", password: "1234" },
   { username: "juan", password: "ganadero" }
 ];
 
-// LOGIN
+const loginContainer = document.getElementById("login-container");
+const appContainer = document.getElementById("app-container");
 const loginBtn = document.getElementById("btn-login");
 const logoutBtn = document.getElementById("btn-logout");
 const errorMsg = document.getElementById("error-msg");
 
+// --- ELEMENTOS DE LA CALCULADORA ---
+const botones = document.querySelectorAll('.animal-btn');
+const titulo = document.getElementById('titulo');
+const subtitulo = document.getElementById('subtitulo');
+const resProd = document.getElementById('res-produccion');
+const resIng = document.getElementById('res-ingresos');
+const resGan = document.getElementById('res-ganancia');
+const mensaje = document.getElementById('mensaje');
+const tarjetaResultados = document.getElementById('resultados');
+
+// Inputs
+const inputCant = document.getElementById('cantidad');
+const inputProd = document.getElementById('produccion');
+const inputPrec = document.getElementById('precio');
+const inputGast = document.getElementById('gastos');
+
+let animalActual = "vaca";
+
+const config = {
+  vaca: { titulo: "Gestión de Vacas", subtitulo: "Producción de leche", unidad: "litros" },
+  cerdo: { titulo: "Gestión de Cerdos", subtitulo: "Producción de carne", unidad: "kg" },
+  gallina: { titulo: "Gestión de Gallinas", subtitulo: "Producción de huevos", unidad: "unidades" },
+  oveja: { titulo: "Gestión de Ovejas", subtitulo: "Producción de lana o carne", unidad: "kg" },
+  cabra: { titulo: "Gestión de Cabras", subtitulo: "Producción de leche", unidad: "litros" },
+  pez: { titulo: "Gestión de Peces (Piscicultura)", subtitulo: "Producción de biomasa", unidad: "kg" }
+};
+
+// 1. CARGAR MEMORIA INICIAL
+let memoria = JSON.parse(sessionStorage.getItem("memoriaGanadera")) || {
+  vaca: {}, cerdo: {}, gallina: {}, oveja: {}, cabra: {}, pez: {}
+};
+
+// --- GESTIÓN DE SESIÓN ---
+window.onload = () => {
+  if (sessionStorage.getItem("isLoggedIn") === "true") {
+    loginContainer.style.display = "none";
+    appContainer.style.display = "block";
+    cargarDatos(); // Cargar datos del animal por defecto (vaca)
+  }
+};
+
 loginBtn.addEventListener("click", () => {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-
-  const userFound = USERS.find(u => u.username === username && u.password === password);
-
-  if (userFound) {
-    document.getElementById("login-container").style.display = "none";
-    document.getElementById("app-container").style.display = "block";
-    errorMsg.style.display = "none";
+  const u = document.getElementById("username").value;
+  const p = document.getElementById("password").value;
+  if (USERS.find(user => user.username === u && user.password === p)) {
+    sessionStorage.setItem("isLoggedIn", "true");
+    loginContainer.style.display = "none";
+    appContainer.style.display = "block";
+    cargarDatos();
   } else {
     errorMsg.style.display = "block";
   }
 });
 
 logoutBtn.addEventListener("click", () => {
-  document.getElementById("app-container").style.display = "none";
-  document.getElementById("login-container").style.display = "block";
-  document.getElementById("username").value = "";
-  document.getElementById("password").value = "";
+  sessionStorage.removeItem("isLoggedIn");
+  sessionStorage.removeItem("memoriaGanadera");
+  window.location.reload();
 });
 
-// -------------------------
-// CALCULADORA GANADERA
-// -------------------------
-const botones = document.querySelectorAll('.animal-btn');
-const titulo = document.getElementById('titulo');
-const subtitulo = document.getElementById('subtitulo');
-const cantidad = document.getElementById('cantidad');
-const produccion = document.getElementById('produccion');
-const precio = document.getElementById('precio');
-const gastos = document.getElementById('gastos');
-const resProduccion = document.getElementById('res-produccion');
-const resIngresos = document.getElementById('res-ingresos');
-const resGanancia = document.getElementById('res-ganancia');
-const mensaje = document.getElementById('mensaje');
-const resultados = document.getElementById('resultados');
+// --- LÓGICA DE PERSISTENCIA POR ANIMAL ---
 
-let animalActual = "vaca";
-
-const config = {
-  vaca: { titulo: "Calculadora de Vacas", subtitulo: "Producción de leche", unidad: "litros" },
-  cerdo: { titulo: "Calculadora de Cerdos", subtitulo: "Producción de carne", unidad: "kg" },
-  gallina: { titulo: "Calculadora de Gallinas", subtitulo: "Producción de huevos", unidad: "huevos" }
-};
-
-const memoria = { vaca: {}, cerdo: {}, gallina: {} };
-
-botones.forEach(btn => {
-  btn.addEventListener('click', () => {
-    guardarDatos();
-    botones.forEach(b => b.classList.remove('activo'));
-    btn.classList.add('activo');
-    animalActual = btn.dataset.animal;
-    actualizarUI();
-    cargarDatos();
-  });
-});
-
-function actualizarUI() {
-  titulo.textContent = config[animalActual].titulo;
-  subtitulo.textContent = config[animalActual].subtitulo;
-}
-
-function guardarDatos() {
+function guardarEstadoActual() {
   memoria[animalActual] = {
-    cantidad: cantidad.value,
-    produccion: produccion.value,
-    precio: precio.value,
-    gastos: gastos.value,
-    resProduccion: resProduccion.textContent,
-    resIngresos: resIngresos.textContent,
-    resGanancia: resGanancia.textContent,
-    mensaje: mensaje.textContent,
-    visible: resultados.style.display
+    cantidad: inputCant.value,
+    produccion: inputProd.value,
+    precio: inputPrec.value,
+    gastos: inputGast.value,
+    // Guardar el estado del cálculo
+    htmlProd: resProd.innerHTML,
+    htmlIng: resIng.innerHTML,
+    htmlGan: resGan.innerHTML,
+    textoMensaje: mensaje.innerText,
+    claseMensaje: mensaje.className,
+    visibleResultados: tarjetaResultados.style.display
   };
+  sessionStorage.setItem("memoriaGanadera", JSON.stringify(memoria));
 }
 
 function cargarDatos() {
   const data = memoria[animalActual] || {};
-  cantidad.value = data.cantidad || "";
-  produccion.value = data.produccion || "";
-  precio.value = data.precio || "";
-  gastos.value = data.gastos || "";
-  resProduccion.textContent = data.resProduccion || "--";
-  resIngresos.textContent = data.resIngresos || "--";
-  resGanancia.textContent = data.resGanancia || "--";
-  mensaje.textContent = data.mensaje || "";
-  resultados.style.display = data.visible || "none";
+  
+  // Restaurar valores de inputs
+  inputCant.value = data.cantidad || "";
+  inputProd.value = data.produccion || "";
+  inputPrec.value = data.precio || "";
+  inputGast.value = data.gastos || "";
+
+  // Restaurar etiquetas de resultados
+  resProd.innerHTML = data.htmlProd || "--";
+  resIng.innerHTML = data.htmlIng || "--";
+  resGan.innerHTML = data.htmlGan || "--";
+  mensaje.innerText = data.textoMensaje || "";
+  mensaje.className = data.claseMensaje || "";
+  
+  // Restaurar visibilidad de la tarjeta
+  tarjetaResultados.style.display = data.visibleResultados || "none";
+  
+  // Actualizar Títulos
+  titulo.textContent = config[animalActual].titulo;
+  subtitulo.textContent = config[animalActual].subtitulo;
 }
 
-function calcular() {
-  const c = parseFloat(cantidad.value);
-  const p = parseFloat(produccion.value);
-  const pr = parseFloat(precio.value);
-  const g = parseFloat(gastos.value);
+// Eventos de botones de animales
+botones.forEach(btn => {
+  btn.addEventListener('click', () => {
+    guardarEstadoActual(); // Guardar lo que hay antes de cambiar
+    
+    botones.forEach(b => b.classList.remove('activo'));
+    btn.classList.add('activo');
+    
+    animalActual = btn.dataset.animal;
+    cargarDatos(); // Cargar lo guardado del nuevo animal
+  });
+});
 
-  if (isNaN(c) || isNaN(p) || isNaN(pr) || isNaN(g)) {
-    alert("Completa todos los campos correctamente");
+// --- OPERACIÓN MATEMÁTICA ---
+
+function calcular() {
+  const c = parseFloat(inputCant.value);
+  const p = parseFloat(inputProd.value);
+  const pr = parseFloat(inputPrec.value);
+  const g = parseFloat(inputGast.value);
+
+  if ([c, p, pr, g].some(val => isNaN(val) || val < 0)) {
+    alert("Por favor, ingrese valores numéricos válidos y positivos.");
     return;
   }
 
@@ -115,28 +146,31 @@ function calcular() {
   const ingresos = total * pr;
   const ganancia = ingresos - g;
 
-  resProduccion.textContent = total + " " + config[animalActual].unidad;
-  resIngresos.textContent = "$ " + ingresos;
-  resGanancia.textContent = "$ " + ganancia;
+  const f = new Intl.NumberFormat('es-CO');
+
+  resProd.innerHTML = `<strong>${f.format(total.toFixed(2))}</strong> ${config[animalActual].unidad}`;
+  resIng.innerHTML = `<strong>$ ${f.format(ingresos.toFixed(2))}</strong>`;
+  resGan.innerHTML = `<strong>$ ${f.format(ganancia.toFixed(2))}</strong>`;
 
   if (ganancia >= 0) {
-    mensaje.textContent = "Ganancia ✔";
+    mensaje.innerText = "RESULTADO: GANANCIA ✔";
     mensaje.className = "ganancia-ok";
   } else {
-    mensaje.textContent = "Pérdida ✖";
+    mensaje.innerText = "RESULTADO: PÉRDIDA ✖";
     mensaje.className = "perdida";
   }
 
-  resultados.style.display = "block";
-  guardarDatos();
+  tarjetaResultados.style.display = "block";
+  
+  guardarEstadoActual(); // Guardar automáticamente tras calcular
+  tarjetaResultados.scrollIntoView({ behavior: 'smooth' });
 }
 
 function limpiar() {
   memoria[animalActual] = {};
+  sessionStorage.setItem("memoriaGanadera", JSON.stringify(memoria));
   cargarDatos();
 }
 
 document.getElementById('btn-calcular').addEventListener('click', calcular);
 document.getElementById('btn-limpiar').addEventListener('click', limpiar);
-
-actualizarUI();
